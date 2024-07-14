@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<!--FORMULARIO-CONTACTO-->
+<div class="container">
+    <div class="rounded px-4 py-4 mt-3">
+      <div class="rounded shadow fw-medium">
+        <div class="row p-0">
+          <div class="col-sm-6 py-5 px-5 rounded-start bg-primary text-white">
+            <div class="informacion-contacto text-white">
+              <h3 class="mt-4 ms-4 mb-3">Direcciones:</h3>
+              <ul class="list-unstyled fw-normal ms-5 me-0 mt-0">
+                <li class="fs-5 mb-2">Santiago/Chile</li>
+                <li class="fs-5 mb-2">Ca.garridol@duocuc.cl</li>
+                <li class="fs-5 mb-2">+56 9 98989898</li>
+              </ul>
+            </div>
+            <p class="fw-medium fs-4 ms-4 mb-2 me-0 mt-4">Redes Sociales:</p>
+            <div class="iconos-social-contacto ms-5 mb-4">
+              <a class="instagram" href="#">
+                <i class="bi bi-instagram me-4" style="font-size: 25px;color: rgb(255, 255, 255);"></i>
+              </a>
+              <a class="facebook" href="#">
+                <i class="bi bi-facebook me-4" style="font-size: 25px;color: rgb(255, 255, 255);"></i>
+              </a>
+              <a class="twitter" href="#">
+                <i class="bi bi-twitter me-4" style="font-size: 25px;color: rgb(255, 255, 255);"></i>
+              </a>
+            </div>
+            <!--Google Maps-->
+          </div>
+          <div class="col-sm-6 py-5 px-5 rounded-end bg-light text-black">
+            <form class="needs-validation" novalidate id="formulario" name="form" autocomplete="off">
+              <h3 class="tituloForm">Contáctenos </h3><br>
+              <div class="col-sm mb-3" id="form_box">
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" value=""
+                  minlength="2" maxlength="30" required>
+                <div class="invalid-feedback">
+                  Ingrese un nombre valido.
+                </div>
+              </div>
+              <div class="col-sm mb-3" id="form_box">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value=""
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" size="30" required>
+                <div class="invalid-feedback">
+                  Ingrese un correo valido.
+                </div>
+              </div>
+              <div class="col-sm mb" id="form_box">
+                <input type="tel" class="form-control" id="tel" name="tel" placeholder="Telefono" value="" maxlength="15"
+                  required>
+                <div class="invalid-feedback">
+                  Ingrese un telefono valido.
+                </div>
+              </div>
+              <div class="col-sm mb-3" id="form_box">
+                <label for="" class="form-label"></label>
+                <textarea class="form-control" placeholder="Dejanos un comentario" id="floatingTextarea2" name="comentario"
+                  style="height: 100px" minlength="5" maxlength="300" required></textarea>
+                <div class="invalid-feedback">
+                  5 caracteres min, 300 caracteres max.
+                </div>
+              </div>
+              <div class="form-check col-sm mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                <label class="form-check-label" for="invalidCheck">
+                  Acepto los terminos y condiciones
+                </label>
+                <div class="invalid-feedback">
+                  Debe aceptar los terminos antes de enviar.
+                </div>
+              </div>
+              <div class="col-sm mb-3" id="form_box">
+                <button class="btn btn-primary" type="submit">Enviar</button>
+              </div>
+            </form>
+            <!-- Add a div to display the response message -->
+            <div id="responseMessage" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formulario');
+    const responseMessage = document.getElementById('responseMessage');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (form.checkValidity()) {
+            // If the form is valid, send it via AJAX
+            const formData = new FormData(form);
+
+            fetch('/contacto/', {  // Asume que la URL es '/contacto/', ajusta según sea necesario
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response
+                if (data.success) {
+                    responseMessage.textContent = "El formulario se envió correctamente.";
+                    responseMessage.className = 'alert alert-success';
+                    form.reset();  // Clear the form if submission was successful
+                } else {
+                    responseMessage.textContent = 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.';
+                    responseMessage.className = 'alert alert-danger';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                responseMessage.textContent = 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo.';
+                responseMessage.className = 'alert alert-danger';
+            });
+        } else {
+            // If the form is invalid, trigger browser's default validation UI
+            form.reportValidity();
+        }
+    });
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+
+{% endblock %}

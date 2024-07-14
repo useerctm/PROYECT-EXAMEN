@@ -1,0 +1,16 @@
+<!-- gracias.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center my-5">
+    <h1 class="display-4">¡Gracias por tu compra!</h1>
+    <p class="lead">Tu pedido ha sido procesado exitosamente.</p>
+    <p>Detalles del pedido:</p>
+    <ul class="list-unstyled">
+        <li><strong>Número de pedido:</strong> {{ codigo_aleatorio }}</li>
+        <li><strong>Fecha:</strong> {{ fecha_actual }}</li>
+    </ul>
+    <a href="{% url 'catalogo' %}" class="btn btn-primary">Volver al inicio</a>
+</div>
+{% endblock %}

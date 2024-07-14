@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Historial de Pedidos</h2>
+    <ul class="list-unstyled">
+        {% for pedido in pedidos %}
+        <li>
+            <div class="border p-3 mb-2">
+                <p><strong>Número de Pedido:</strong> {{ pedido.codigo_aleatorio }}</p>
+                <p><strong>Fecha:</strong> {{ pedido.fecha_actual }}</p>
+                <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+                <p><strong>Número de Seguimiento:</strong> {{ pedido.numero_seguimiento }}</p>
+                <!-- Aquí puedes agregar más detalles si es necesario -->
+            </div>
+        </li>
+        {% empty %}
+        <p>No tienes pedidos anteriores.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
